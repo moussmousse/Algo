@@ -7,11 +7,12 @@ struct bintree {
   int data;
 };
 
-struct file {
-  struct file *suiv;
-  struct tree *donne;
+struct queue {
+  struct queue *next;
+  struct bintree *data;
 };
 
+/* BIN TREE */
 struct bintree *initree(int val);
 void setvalue(struct bintree *tree,int val);
 void insert_node_left(struct bintree *tree, int val);
@@ -19,24 +20,30 @@ void insert_node_right(struct bintree *tree, int val);
 void printlefthand(struct bintree *tree);
 void printrighthand(struct bintree *tree);
 struct bintree *creat_test_tree();
-struct file *inifile();
-void file_insert(struct file *file,struct bintree *tree);
-void file_pop(struct file *file);
-int file_empty(struct file *file);
-void print_prof(struct bintree *tree);
-void print_file (struct file *file);
+
+/* QUEUE */
+
+struct queue *init_queue();
+void enqueue(struct queue *queue, struct bintree *tree);
+struct bintree *dequeue (struct queue *queue);
+
+void print_larg(struct bintree *tree);
+
+/*ABR */
+
 int main ()
 {
 
   struct bintree *tree = creat_test_tree();
-//  printlefthand(tree);
-//  printrighthand(tree);
-//  print_prof(tree);
-  struct file *file = init
+  printf("Main gauche : ");
+  printlefthand(tree);
+  printf("\nMain droite : ");
+  printrighthand(tree);
+  printf("\nLargeur :     ");
+  print_larg(tree);
+  printf("\n");
   return 0;
 }
-
-
 
 struct bintree *initree(int val)
 {
@@ -80,8 +87,8 @@ void printlefthand(struct bintree *tree)
 {
   if (tree == NULL)
     return;
-  printf("%d - ",tree->data);
   printlefthand(tree->left);
+  printf("%d - ",tree->data);
   printlefthand(tree->right);
 }
 
@@ -118,51 +125,46 @@ struct bintree *creat_test_tree()
   return tree;
 }
 
-struct file *inifile()
+
+
+struct queue *init_queue()
 {
-  struct file *file = malloc(sizeof(struct file));
-  file -> suiv = NULL;
-  return file;
+  struct queue *queue = malloc(sizeof(struct queue));
+  queue->next = NULL;
+  return queue;
 }
 
-void file_insert (struct file *file, struct bintree *tree)
+void enqueue (struct queue *queue, struct bintree *tree)
 {
-  struct file *newelem = inifile(tree);
-  file -> suiv = newelem;
+  struct queue *temp = queue;
+  while (temp->next != NULL)
+    temp = temp->next;
+  temp->next = init_queue ();
+  temp->next->data=tree;
+}
+  
+struct bintree *dequeue (struct queue *queue)
+{
+  struct bintree *tree = initree(0);
+  if (queue->next!= NULL)
+    tree = queue->next->data;
+  if (queue->next->next !=NULL)
+    queue->next = queue->next->next;
+  else
+    queue->next = NULL;
+  return tree;
 }
 
-void file_pop(struct file *file)
+void print_larg(struct bintree *tree)
 {
-  file = file->suiv->suiv;
-}
-
-int file_empty(struct file *file)
-{
-  return file->suiv == NULL;
-}
-
-void print_prof (struct bintree *tree)
-{
-  struct file *file = inifile();
-  file_insert(file,tree);
-  while (!file_empty(file))
-  {
-    /*
-    if (file->donne->left !=NULL)
-      file_insert(file,file->donne->left);
-    if (file->donne->right != NULL)
-      file_insert(file,file->donne->right);
-    */
-    printf("%d - ",file->suiv->donne==NULL);
-    file_pop(file);
+  struct queue *queue = init_queue();
+  enqueue (queue,tree);
+  while (queue->next !=NULL){
+    struct bintree *node = dequeue(queue);
+    if (node->left != NULL)
+      enqueue (queue, node->left);
+    if (node->right !=NULL)
+      enqueue (queue,node->right);
+    printf ("%d - ",node->data);
   }
-
-}
-
-void print_file (struct file *file)
-{
-  while (file->suiv != NULL)
-  {
-    printf (file->suiv
-
 }
