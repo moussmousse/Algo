@@ -1,1 +1,2 @@
-# algo
+# Algo
+Algorithm in PYTHON
