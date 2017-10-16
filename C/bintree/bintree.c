@@ -38,7 +38,7 @@ int main ()
 {
 
   /*Test bintree*/
-  struct bintree *tree = creat_test_tree();
+/*  struct bintree *tree = creat_test_tree();
   printf("Main gauche : ");
   printlefthand(tree);
   printf("\nMain droite : ");
@@ -47,7 +47,7 @@ int main ()
   print_larg(tree);
   printf("\n");
   printf("ABR ? %d \n",is_ABR(tree));
-
+*/
 
   /*Test ABR*/
   struct bintree *ABR = creat_test_ABR();
@@ -221,7 +221,7 @@ int is_ABR(struct bintree *tree)
   }
   else if (tree->right != NULL)
   {
-    is_ABR(tree->left);
+    is_ABR(tree->right);
     return (tree->data < tree->right->data);
   }
   return 1;
