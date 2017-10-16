@@ -20,7 +20,7 @@ void insert_node_right(struct bintree *tree, int val);
 void printlefthand(struct bintree *tree);
 void printrighthand(struct bintree *tree);
 struct bintree *creat_test_tree();
-
+int tree_height (struct bintree *tree);
 /* QUEUE */
 
 struct queue *init_queue();
@@ -33,12 +33,16 @@ void print_larg(struct bintree *tree);
 int is_ABR(struct bintree *tree);
 struct bintree*creat_test_ABR();
 
+/* OTHERS */
+int max (int a, int b);
 
 int main ()
 {
 
   /*Test bintree*/
-/*  struct bintree *tree = creat_test_tree();
+  struct bintree *tree = creat_test_tree();
+  printf ("Height : %d \n",tree_height(tree));
+  /*
   printf("Main gauche : ");
   printlefthand(tree);
   printf("\nMain droite : ");
@@ -51,10 +55,13 @@ int main ()
 
   /*Test ABR*/
   struct bintree *ABR = creat_test_ABR();
+  printf ("height : %d \n",tree_height(ABR));
+  /*
   printf ("\nPArcours largeur : ");
   print_larg(ABR);
   printf("\n");
   printf("ABR ? %d \n",is_ABR(ABR));
+  */
   return 0;
 }
 
@@ -105,6 +112,24 @@ void printlefthand(struct bintree *tree)
   printlefthand(tree->left);
   printf("%d - ",tree->data);
   printlefthand(tree->right);
+}
+
+int max(int a , int b)
+{
+  if (a >= b)
+    return a;
+  return b;
+}
+
+int tree_height (struct bintree *tree)
+{
+  if (tree -> left != NULL && tree -> right != NULL)
+    return 1+ max (tree_height(tree->left),tree_height(tree->right));
+  else if (tree -> left != NULL)
+    return 1+ tree_height(tree->left);
+  else if (tree -> right != NULL)
+    return 1+ tree_height(tree->right);
+  return 0;
 }
 
 void printrighthand(struct bintree *tree)
