@@ -30,10 +30,14 @@ struct bintree *dequeue (struct queue *queue);
 void print_larg(struct bintree *tree);
 
 /*ABR */
+int is_ABR(struct bintree *tree);
+struct bintree*creat_test_ABR();
+
 
 int main ()
 {
 
+  /*Test bintree*/
   struct bintree *tree = creat_test_tree();
   printf("Main gauche : ");
   printlefthand(tree);
@@ -42,8 +46,18 @@ int main ()
   printf("\nLargeur :     ");
   print_larg(tree);
   printf("\n");
+  printf("ABR ? %d \n",is_ABR(tree));
+
+
+  /*Test ABR*/
+  struct bintree *ABR = creat_test_ABR();
+  printf ("PArcours largeur : ");
+  print_larg(ABR);
+  printf("\n ABR ? %d \n",is_ABR(ABR));
   return 0;
 }
+
+/* BIN TREE */
 
 struct bintree *initree(int val)
 {
@@ -125,7 +139,26 @@ struct bintree *creat_test_tree()
   return tree;
 }
 
+struct bintree *creat_test_ABR()
+{
+  struct bintree *tree = initree(8);
+  insert_node_left(tree,3);
+  insert_node_left(tree->left,1);
+  insert_node_right(tree->left,5);
+  insert_node_right(tree,10);
+  insert_node_right(tree->right,12);
 
+  printf ("---------------------------------------\n");
+  printf ("              ABR de test              \n");
+  printf ("\n");
+  printf ("                   8                   \n\n");
+  printf ("              3        10              \n\n");
+  printf ("           1     5         12          \n\n");
+  printf ("---------------------------------------\n\n");
+
+}
+
+/* QUEUE */
 
 struct queue *init_queue()
 {
@@ -168,3 +201,30 @@ void print_larg(struct bintree *tree)
     printf ("%d - ",node->data);
   }
 }
+
+
+/* ABR */
+
+int is_ABR(struct bintree *tree)
+{
+  if (tree->left != NULL && tree -> right != NULL)
+  {
+    is_ABR(tree->left);
+    is_ABR(tree->right);
+    return (tree->left->data < tree->data &&
+	tree->data < tree->right->data);
+  }
+  else if (tree->left != NULL)
+  {
+    is_ABR(tree->left);
+    return (tree->left->data < tree -> data);
+  }
+  else if (tree->right != NULL)
+  {
+    is_ABR(tree->left);
+    return (tree->data < tree->right->data);
+  }
+  return 1;
+}
+
+
