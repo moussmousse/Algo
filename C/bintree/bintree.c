@@ -21,6 +21,7 @@ void printlefthand(struct bintree *tree);
 void printrighthand(struct bintree *tree);
 struct bintree *creat_test_tree();
 int tree_height (struct bintree *tree);
+
 /* QUEUE */
 
 struct queue *init_queue();
@@ -32,17 +33,20 @@ void print_larg(struct bintree *tree);
 /*ABR */
 int is_ABR(struct bintree *tree);
 struct bintree*creat_test_ABR();
+void rand_to_ABR(struct bintree *tree);
+void rand_to_ABR_rec(struct bintree *tree);
 
 /* OTHERS */
 int max (int a, int b);
+void swap_node (struct bintree *t1, struct bintree *t2);
 
 int main ()
 {
 
   /*Test bintree*/
   struct bintree *tree = creat_test_tree();
-  printf ("Height : %d \n",tree_height(tree));
   /*
+  printf ("Height : %d \n",tree_height(tree));
   printf("Main gauche : ");
   printlefthand(tree);
   printf("\nMain droite : ");
@@ -55,13 +59,21 @@ int main ()
 
   /*Test ABR*/
   struct bintree *ABR = creat_test_ABR();
-  printf ("height : %d \n",tree_height(ABR));
+  //printf ("height : %d \n",tree_height(ABR));
   /*
   printf ("\nPArcours largeur : ");
   print_larg(ABR);
   printf("\n");
   printf("ABR ? %d \n",is_ABR(ABR));
   */
+  print_larg(tree);
+  printf("\n");
+  printlefthand(tree);
+  printf("\n Sorting... \n");
+  rand_to_ABR(tree);
+  print_larg(tree);
+  printf("\n");
+  printlefthand(tree);  
   return 0;
 }
 
@@ -121,8 +133,9 @@ int max(int a , int b)
   return b;
 }
 
-int tree_height (struct bintree *tree)
+int tree_height (struct bintree *treeo)
 {
+  struct bintree *tree = treeo;
   if (tree -> left != NULL && tree -> right != NULL)
     return 1+ max (tree_height(tree->left),tree_height(tree->right));
   else if (tree -> left != NULL)
@@ -228,7 +241,9 @@ void print_larg(struct bintree *tree)
   }
 }
 
-/* ABR */
+
+
+/*ABR*/
 
 int is_ABR(struct bintree *tree)
 {
@@ -252,4 +267,48 @@ int is_ABR(struct bintree *tree)
   return 1;
 }
 
+void swap_node (struct bintree *t1 , struct bintree *t2)
+{
+  int tmp = t1->data;
+  t1->data = t2->data;
+  t2->data = tmp;
+}
 
+void rand_to_ABR_rec(struct bintree *tree)
+{
+  printf ("\n rec : ");
+  print_larg(tree);/*
+  if (tree->left !=NULL && tree -> right != NULL)
+  {
+    if (tree->left->data > tree->right->data)
+      swap_node(tree->left,tree->right);
+    if (tree->left->data > tree->data)
+      swap_node(tree->left,tree);
+    if (tree->data > tree->right->data)
+      swap_node(tree,tree->right);
+    rand_to_ABR_rec(tree->left);
+    rand_to_ABR_rec(tree->right);
+    return ;
+  }*/
+  if (tree->left != NULL)
+  { 
+    if (tree->left->data > tree->data)
+      swap_node(tree->left,tree);
+    rand_to_ABR_rec(tree->left);
+    return;
+  }
+  if (tree->right != NULL) 
+  {
+    if (tree->data > tree->right->data)
+      swap_node(tree,tree->right);
+    rand_to_ABR_rec(tree->right);
+    return;
+  }
+}
+
+void rand_to_ABR(struct bintree *tree)
+{
+  int h = tree_height(tree);
+  for (int i = 0 ; i<2*h ; i++)
+    rand_to_ABR_rec(tree);
+}
